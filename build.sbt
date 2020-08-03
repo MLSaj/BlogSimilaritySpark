@@ -2,7 +2,7 @@ name := "BlogSimilaritySpark"
 
 version := "0.1"
 
-scalaVersion := "2.12.4"
+scalaVersion := "2.12.10"
 val sparkVersion = "3.0.0"
 val postgresVersion = "42.2.2"
 

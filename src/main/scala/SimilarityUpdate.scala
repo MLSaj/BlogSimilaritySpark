@@ -1,3 +1,5 @@
+package com.testing
+
 import com.mongodb.spark.config._
 import com.mongodb.spark.sql._
 import org.apache.spark.ml.feature.{HashingTF, IDF, Normalizer, Tokenizer}
@@ -6,7 +8,10 @@ import org.apache.spark.sql.{SaveMode, SparkSession}
 
 object SimilarityUpdate {
 
-  val sparkSession = SparkSession.builder().master("local").getOrCreate()
+  val sparkSession = SparkSession.builder()
+    .appName("Similarity Update")
+    //.master("local")
+    .getOrCreate()
 
 
   val mysql_host_name = "localhost"
