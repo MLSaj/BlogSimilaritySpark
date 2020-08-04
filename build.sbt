@@ -5,6 +5,7 @@ version := "0.1"
 scalaVersion := "2.12.10"
 val sparkVersion = "3.0.0"
 val postgresVersion = "42.2.2"
+val kafkaVersion = "2.4.0"
 
 resolvers ++= Seq(
   "bintray-spark-packages" at "https://dl.bintray.com/spark-packages/maven",
@@ -21,6 +22,12 @@ libraryDependencies ++= Seq(
   "org.apache.logging.log4j" % "log4j-core" % "2.4.1",
   "org.mongodb.spark" %% "mongo-spark-connector" % "2.4.1",
 
+
   //"mysql" % "mysql-connector-java" % "5.1.12",
-  "mysql" % "mysql-connector-java" % "8.0.18"
+  "mysql" % "mysql-connector-java" % "8.0.18",
+
+  //
+// kafka
+  "org.apache.kafka" %% "kafka" % kafkaVersion,
+  "org.apache.kafka" % "kafka-streams" % kafkaVersion
 )

@@ -1,0 +1,1 @@
+/Users/sajeedbakht/Documents/kafka25/bin/kafka-topics.sh --create --zookeeper localhost:2181 --topic testTopic --partitions 2 --replication-factor 1 min.insync.replicas=1
