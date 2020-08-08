@@ -1,14 +1,20 @@
+import WriteToMongoTest.sparkSession
+import com.mongodb.spark.config.ReadConfig
+import com.mongodb.spark.sql._
+import com.testing.SimilarityUpdate.makeMongoURI
 import org.apache.spark.mllib.linalg.Vectors
-
-
-
 
 //(28,[1,4,7,9,10,11,12,14,15,17,18,20,21,22,23,24,26,27],[2.0,2.0,1.0,1.0,1.0,1.0,2.0,2.0,3.0,1.0,1.0,3.0,2.0,1.0,3.0,1.0,1.0,2.0])
 
 object StreamState {
 
   val mongo_db = {
+    val mongoURI = "mongodb://000.000.000.000:27017"
 
+    val Conf = makeMongoURI(mongoURI,"blog","articles")
+    val readConfigintegra: ReadConfig = ReadConfig(Map("uri" -> Conf))
+    val df3 = sparkSession.sqlContext.loadFromMongoDB(ReadConfig(Map("uri" -> "mongodb://000.000.000.000:27017/blog.vectors")))
+    df3
   }
 
 //    def add_vectors() ={
@@ -59,7 +65,7 @@ object StreamState {
 //
 //    }
 
-  def add_two_sparse(x:org.apache.spark.mllib.linalg.Vector, y:org.apache.spark.mllib.linalg.Vector)
+  def add_two_sparse(x:org.apache.spark.ml.linalg.Vector, y:org.apache.spark.ml.linalg.Vector)
   : org.apache.spark.mllib.linalg.Vector= {
 
     val array_x = x.toArray
@@ -132,7 +138,13 @@ object StreamState {
 //    }
 //  }
 
+
   def main(args: Array[String]): Unit = {
     //add_vectors()
+    mongo_db.show(20,false)
+
+    val sparse_rep = mongo_db.select("sparse_rep")
+
+    mongo_db.printSchema()
   }
 }
