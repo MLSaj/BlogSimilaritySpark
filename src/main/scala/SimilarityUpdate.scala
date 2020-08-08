@@ -3,14 +3,14 @@ package com.testing
 import com.mongodb.spark.config._
 import com.mongodb.spark.sql._
 import org.apache.spark.ml.feature.{HashingTF, IDF, Normalizer, Tokenizer}
+import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions.{udf, _}
-import org.apache.spark.sql.{SaveMode, SparkSession}
 
 object SimilarityUpdate {
 
   val sparkSession = SparkSession.builder()
     .appName("Similarity Update")
-    //.master("local")
+    .master("local")
     .getOrCreate()
 
 
@@ -45,7 +45,7 @@ object SimilarityUpdate {
 
   def main(args: Array[String]): Unit = {
 
-    df3.show(false)
+    //df3.show(false)
     val df4 = df3.select("title", "markdown")
 
     def last_element= udf((blog : String) => blog takeRight(1))
@@ -67,20 +67,27 @@ object SimilarityUpdate {
     val rescaledData = idfModel.transform(featurizedData)
 
     val normalizer = new Normalizer().setInputCol("feature").setOutputCol("norm")
+
     val data = normalizer.transform(rescaledData)
+
+    data.show(20,false)
+    //data.write.mode(SaveMode.Overwrite).jdbc(ur)
+
 
 
     val dot_udf =  udf((x: org.apache.spark.ml.linalg.Vector,y:org.apache.spark.ml.linalg.Vector) => x.dot(y))
 
-    val join = data.alias("i").join(data.alias("j"),
-      col("i.id") < col("j.id")).select(
-      col("i.title").alias("i"),
-      col("j.title").alias("j"),
-      dot_udf(col("i.norm"), col("j.norm")).alias("dot"))
-      .sort("i","j")
 
 
-    join.write.mode(SaveMode.Overwrite).jdbc(url=mysql_jdbc_url, table = mysql_table_name,mysql_properties);
+//    val join = data.alias("i").join(data.alias("j"),
+//      col("i.id") < col("j.id")).select(
+//      col("i.title").alias("i"),
+//      col("j.title").alias("j"),
+//      dot_udf(col("i.norm"), col("j.norm")).alias("dot"))
+//      .sort("i","j")
+//
+//
+//    join.write.mode(SaveMode.Overwrite).jdbc(url=mysql_jdbc_url, table = mysql_table_name,mysql_properties);
 
 
 

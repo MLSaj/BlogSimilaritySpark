@@ -29,5 +29,8 @@ libraryDependencies ++= Seq(
   //
 // kafka
   "org.apache.kafka" %% "kafka" % kafkaVersion,
-  "org.apache.kafka" % "kafka-streams" % kafkaVersion
+  "org.apache.kafka" % "kafka-streams" % kafkaVersion,
+
+  //
+    "io.argonaut" %% "argonaut" % "6.3.0"
 )
