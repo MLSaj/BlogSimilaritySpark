@@ -21,14 +21,6 @@ object StreamState{
   implicit val userSessionEncoder: Encoder[Option[UserSession]] =
     Encoders.kryo[Option[UserSession]]
 
-  def deserializeUserEvent(json: String): UserEvent = {
-    json.decodeEither[UserEvent] match {
-      case Right(userEvent)=> userEvent
-      case Left(error) =>
-        println(s"Failed to parse user event: $error")
-        UserEvent.empty
-    }
-  }
 
 
 
@@ -155,7 +147,7 @@ object StreamState{
        */
       import sparkSession.implicits._
 
-      val empty_vector = Vectors.sparse(28,Array(0),Array(0.00000001))
+      val empty_vector = Vectors.sparse(28,Array(),Array())
       //val empty_map:Predef.Map[String, Boolean] = Map()
       val empty_map = Map[String, Boolean]()
 
@@ -170,6 +162,7 @@ object StreamState{
 
       val vector_events = userEvents.map(
         UserEvent => {
+          //val current_event = with_sparse.filter($"title" === UserEvent.url)
           val current_event = with_sparse.filter($"title" === UserEvent.url)
 
           val values: Array[Double] = current_event.select("values").as[Array[Double]].collect()(0)
@@ -211,8 +204,47 @@ object StreamState{
         }
       }
 
+    import sparkSession.implicits._
+    def updateSessionEventsTwo(
+                             id: Int,
+                             userEvents: Iterator[UserEvent],
+                             state: GroupState[UserSession]): Option[UserSession] = {
 
+      if (state.hasTimedOut) {
+        // We've timed out, lets extract the state and send it down the stream
+        state.remove()
+        state.getOption
+      } else {
 
+        val current_state = state.getOption
+
+        val empty_vector = Vectors.sparse(28, Array(3), Array(0.0001))
+
+        val empty_map = Map[String, Boolean]()
+
+        val empty_rec: Array[String] = Array("BLOGTEST")
+        val empty_session = UserSession(empty_map, Option(empty_vector), empty_rec)
+
+        val statez = current_state.getOrElse(empty_session)
+
+        state.update(statez)
+
+//        val current_event = with_sparse.filter($"title" === "Blog1")
+//
+//        val sim = with_sparse.withColumn("similarities", compare_sparse(empty_vector)
+//        (with_sparse("sparse")))
+//
+//        val order:Array[String] = sim.select("title").orderBy(desc("similarities")).limit(2)
+//          .map(r => r(0).asInstanceOf[String]).collect()
+//
+//        val final_session = UserSession(empty_map, Option(empty_vector), order)
+//
+//        state.update(final_session)
+        state.setTimeoutDuration("1 minute")
+        state.getOption
+      }
+
+    }
 
 
 
@@ -232,7 +264,7 @@ object StreamState{
       .option("host", "localhost")
       .option("port", 12345)
       .load()
-      .as[UserEvent]
+      .as[String]
 
 
 
@@ -241,9 +273,10 @@ object StreamState{
 
     val finishedUserSessionsStream: Dataset[UserSession] =
       userEventsStream
+        .map(deserializeUserEvent)
         .groupByKey(_.id)
         .mapGroupsWithState(GroupStateTimeout.ProcessingTimeTimeout())(
-          updateSessionEvents)
+          updateSessionEventsTwo)
         .flatMap(userSession => userSession)
 
      finishedUserSessionsStream.writeStream
@@ -279,6 +312,17 @@ object StreamState{
 
   }
 
+  def deserializeUserEvent(json: String): UserEvent = {
+    json.decodeEither[UserEvent] match {
+      case Right(userEvent) => userEvent
+      case Left(error) =>
+        println(s"Failed to parse user event: $error")
+        UserEvent.empty
+    }
+  }
 
 }
+
+
+
 

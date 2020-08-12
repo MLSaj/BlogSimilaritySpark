@@ -8,6 +8,7 @@ import user.{UserEvent,UserVector}
 import com.mongodb.spark.sql._
 
 import scala.collection.{Map, mutable}
+import org.apache.spark.sql.functions.{desc, udf}
 
 object conversionTest {
 
@@ -135,7 +136,18 @@ def main(args: Array[String]): Unit = {
 
   val filter_seen = with_sparse.filter(!with_sparse("title").isin(visits_array : _*))
 
+
   //filter_seen.show(20,false)
+
+  val sim = filter_seen.withColumn("similarities", compare_sparse(sparse_vector)
+      (with_sparse("sparse")))
+
+
+  val order:Array[String] = sim.select("title").orderBy(desc("similarities")).limit(2)
+    .map(r => r(0).asInstanceOf[String]).collect()
+
+
+  order.map(o => println(o))
 
 
 
