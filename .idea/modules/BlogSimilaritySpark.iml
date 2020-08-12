@@ -200,6 +200,7 @@
     <orderEntry type="library" name="sbt: org.scala-lang:scala-reflect:2.12.10:jar" level="project" />
     <orderEntry type="library" name="sbt: org.scalanlp:breeze-macros_2.12:1.0:jar" level="project" />
     <orderEntry type="library" name="sbt: org.scalanlp:breeze_2.12:1.0:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.scalaz:scalaz-core_2.12:7.3.2:jar" level="project" />
     <orderEntry type="library" name="sbt: org.slf4j:jcl-over-slf4j:1.7.30:jar" level="project" />
     <orderEntry type="library" name="sbt: org.slf4j:jul-to-slf4j:1.7.30:jar" level="project" />
     <orderEntry type="library" name="sbt: org.slf4j:slf4j-api:1.7.30:jar" level="project" />

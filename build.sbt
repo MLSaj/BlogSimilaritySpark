@@ -32,5 +32,7 @@ libraryDependencies ++= Seq(
   "org.apache.kafka" % "kafka-streams" % kafkaVersion,
 
   //
-    "io.argonaut" %% "argonaut" % "6.3.0"
+  "io.argonaut" %% "argonaut" % "6.3.0",
+
+  "org.scalaz" %% "scalaz-core" % "7.3.2"
 )

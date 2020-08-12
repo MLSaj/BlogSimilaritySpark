@@ -1,4 +1,8 @@
-[debug] downloaded https://repo1.maven.org/maven2/io/argonaut/argonaut_2.12/6.3.0/argonaut_2.12-6.3.0.pom
-[debug] downloaded https://repo1.maven.org/maven2/io/argonaut/argonaut_2.12/6.3.0/argonaut_2.12-6.3.0.jar
-[debug] downloaded https://repo1.maven.org/maven2/io/argonaut/argonaut_2.12/6.3.0/argonaut_2.12-6.3.0-sources.jar
-[debug] downloaded https://repo1.maven.org/maven2/io/argonaut/argonaut_2.12/6.3.0/argonaut_2.12-6.3.0-javadoc.jar
+[debug] downloaded https://repo1.maven.org/maven2/io/argonaut/argonaut_2.12/6.1.0/argonaut_2.12-6.1.0.pom
+[debug] downloaded https://repo1.maven.org/maven2/io/argonaut/argonaut_2.12/6.1.0/argonaut_2.12-6.1.0.pom.sha1
+[debug] downloaded https://dl.bintray.com/spark-packages/maven/io/argonaut/argonaut_2.12/6.1.0/argonaut_2.12-6.1.0.pom
+[debug] downloaded https://dl.bintray.com/spark-packages/maven/io/argonaut/argonaut_2.12/6.1.0/argonaut_2.12-6.1.0.pom.sha1
+[debug] downloaded https://mvnrepository.com/io/argonaut/argonaut_2.12/6.1.0/argonaut_2.12-6.1.0.pom
+[debug] downloaded https://mvnrepository.com/io/argonaut/argonaut_2.12/6.1.0/argonaut_2.12-6.1.0.pom.sha1
+[debug] downloaded https://repo.typesafe.com/typesafe/simple/maven-releases/io/argonaut/argonaut_2.12/6.1.0/argonaut_2.12-6.1.0.pom
+[debug] downloaded https://repo.typesafe.com/typesafe/simple/maven-releases/io/argonaut/argonaut_2.12/6.1.0/argonaut_2.12-6.1.0.pom.sha1
