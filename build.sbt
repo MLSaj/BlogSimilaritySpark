@@ -7,6 +7,10 @@ val sparkVersion = "3.0.0"
 val postgresVersion = "42.2.2"
 val kafkaVersion = "2.4.0"
 
+
+val cassandraConnectorVersion = "3.0.0-beta"
+//val cassandraConnectorVersion = "2.5.1"
+
 resolvers ++= Seq(
   "bintray-spark-packages" at "https://dl.bintray.com/spark-packages/maven",
   "Typesafe Simple Repository" at "https://repo.typesafe.com/typesafe/simple/maven-releases",
@@ -31,6 +35,10 @@ libraryDependencies ++= Seq(
   "org.apache.kafka" %% "kafka" % kafkaVersion,
   "org.apache.kafka" % "kafka-streams" % kafkaVersion,
 
+  "com.datastax.spark" %% "spark-cassandra-connector" % cassandraConnectorVersion,
+  "joda-time" % "joda-time" % "2.3",
+
+  "com.github.jnr" % "jnr-posix" % "2.0",
   //
   "io.argonaut" %% "argonaut" % "6.3.0",
 
