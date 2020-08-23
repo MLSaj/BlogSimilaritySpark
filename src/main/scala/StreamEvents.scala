@@ -64,11 +64,11 @@ object StreamEvents {
                          events: Iterator[UserEvent],
                          oldState: GroupState[UserSession]):UserSession = {
     var state:UserSession = if (oldState.exists) {
-      println("State exists")
+      //println("State exists")
       oldState.get
     }
     else {
-      println("State does not exist")
+      //println("State does not exist")
       UserSession(user,List.empty[String])
     }
 
@@ -128,12 +128,32 @@ object StreamEvents {
     import sparkSession.implicits._
     //
     //
-    val userEventsStream = sparkSession.readStream
-      .format("socket")
-      .option("host", "localhost")
-      .option("port", 12346)
+//    val userEventsStream = sparkSession.readStream
+//      .format("socket")
+//      .option("host", "localhost")
+//      .option("port", 12346)
+//      .load()
+//      .as[String]
+
+    val KAFKA_TOPIC_NAME_CONS = "eventTopic"
+
+    val df = sparkSession.readStream
+      .format("kafka")
+      .option("kafka.bootstrap.servers", "localhost:9092")
+      .option("subscribe", KAFKA_TOPIC_NAME_CONS)
+      .option("startingOffsets", "latest")
       .load()
-      .as[String]
+      //.as[String
+
+    val userEventsStream = df.selectExpr("CAST(value AS STRING)").as[String]
+
+//    trans_df_1
+//    .writeStream
+//    .format("console")
+//    .outputMode("append")
+//    .start()
+//    .awaitTermination()
+
 
 
     val finishedUserSessionsStream:Dataset[UserSession] =
@@ -145,11 +165,6 @@ object StreamEvents {
 
     finishedUserSessionsStream.writeStream
       .outputMode(OutputMode.Update)
-//      .format("org.apache.spark.sql.cassandra")
-//      .option("checkpointLocation", "checkpoint")
-//      .option("keyspace", "blog")
-//      .option("table", "session")
-//      .start()
       .option("checkpointLocation", "checkpoint")
       .foreach(new SessionCassandraForeachWriter)
       .start()
@@ -157,15 +172,9 @@ object StreamEvents {
 
 
 
-    //    finishedUserSessionsStream.writeStream
-//        //.trigger(Trigger.ProcessingTime("10 milliseconds"))
-//      .outputMode(OutputMode.Update)
-//      .format("org.apache.spark.sql.cassandra")
-//      .option("checkpointLocation", "checkpoint")
-//      .option("keyspace", "blog")
-//      .option("table", "session")
-//      .start()
-//      .awaitTermination()
+
+
+
 
 
   }

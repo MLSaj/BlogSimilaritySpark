@@ -34,6 +34,8 @@ libraryDependencies ++= Seq(
 // kafka
   "org.apache.kafka" %% "kafka" % kafkaVersion,
   "org.apache.kafka" % "kafka-streams" % kafkaVersion,
+  ///"org.apache.spark" %% "spark-sql-kafka-0-10" % "2.4.0" % "provided",
+  "org.apache.spark" % "spark-sql-kafka-0-10_2.12" % "3.0.0",
 
   "com.datastax.spark" %% "spark-cassandra-connector" % cassandraConnectorVersion,
   "joda-time" % "joda-time" % "2.3",

@@ -1,27 +1,11 @@
-[error] sbt.librarymanagement.ResolveException: Error downloading org.apache.spark:spark-mllib_2.12:3.0.0-beta
+[error] sbt.librarymanagement.ResolveException: Error downloading org.apache.spark:spark-sql-kafka-0-10_2.12_2.12:3.0.0
 [error]   Not found
 [error]   Not found
-[error]   not found: /Users/sajeedbakht/.ivy2/local/org.apache.spark/spark-mllib_2.12/3.0.0-beta/ivys/ivy.xml
-[error]   not found: https://repo1.maven.org/maven2/org/apache/spark/spark-mllib_2.12/3.0.0-beta/spark-mllib_2.12-3.0.0-beta.pom
-[error]   not found: https://dl.bintray.com/spark-packages/maven/org/apache/spark/spark-mllib_2.12/3.0.0-beta/spark-mllib_2.12-3.0.0-beta.pom
-[error]   not found: https://mvnrepository.com/org/apache/spark/spark-mllib_2.12/3.0.0-beta/spark-mllib_2.12-3.0.0-beta.pom
-[error]   not found: https://repo.typesafe.com/typesafe/simple/maven-releases/org/apache/spark/spark-mllib_2.12/3.0.0-beta/spark-mllib_2.12-3.0.0-beta.pom
-[error] Error downloading org.apache.spark:spark-sql_2.12:3.0.0-beta
-[error]   Not found
-[error]   Not found
-[error]   not found: /Users/sajeedbakht/.ivy2/local/org.apache.spark/spark-sql_2.12/3.0.0-beta/ivys/ivy.xml
-[error]   not found: https://repo1.maven.org/maven2/org/apache/spark/spark-sql_2.12/3.0.0-beta/spark-sql_2.12-3.0.0-beta.pom
-[error]   not found: https://dl.bintray.com/spark-packages/maven/org/apache/spark/spark-sql_2.12/3.0.0-beta/spark-sql_2.12-3.0.0-beta.pom
-[error]   not found: https://mvnrepository.com/org/apache/spark/spark-sql_2.12/3.0.0-beta/spark-sql_2.12-3.0.0-beta.pom
-[error]   not found: https://repo.typesafe.com/typesafe/simple/maven-releases/org/apache/spark/spark-sql_2.12/3.0.0-beta/spark-sql_2.12-3.0.0-beta.pom
-[error] Error downloading org.apache.spark:spark-core_2.12:3.0.0-beta
-[error]   Not found
-[error]   Not found
-[error]   not found: /Users/sajeedbakht/.ivy2/local/org.apache.spark/spark-core_2.12/3.0.0-beta/ivys/ivy.xml
-[error]   not found: https://repo1.maven.org/maven2/org/apache/spark/spark-core_2.12/3.0.0-beta/spark-core_2.12-3.0.0-beta.pom
-[error]   not found: https://dl.bintray.com/spark-packages/maven/org/apache/spark/spark-core_2.12/3.0.0-beta/spark-core_2.12-3.0.0-beta.pom
-[error]   not found: https://mvnrepository.com/org/apache/spark/spark-core_2.12/3.0.0-beta/spark-core_2.12-3.0.0-beta.pom
-[error]   not found: https://repo.typesafe.com/typesafe/simple/maven-releases/org/apache/spark/spark-core_2.12/3.0.0-beta/spark-core_2.12-3.0.0-beta.pom
+[error]   not found: /Users/sajeedbakht/.ivy2/local/org.apache.spark/spark-sql-kafka-0-10_2.12_2.12/3.0.0/ivys/ivy.xml
+[error]   not found: https://repo1.maven.org/maven2/org/apache/spark/spark-sql-kafka-0-10_2.12_2.12/3.0.0/spark-sql-kafka-0-10_2.12_2.12-3.0.0.pom
+[error]   not found: https://dl.bintray.com/spark-packages/maven/org/apache/spark/spark-sql-kafka-0-10_2.12_2.12/3.0.0/spark-sql-kafka-0-10_2.12_2.12-3.0.0.pom
+[error]   not found: https://mvnrepository.com/org/apache/spark/spark-sql-kafka-0-10_2.12_2.12/3.0.0/spark-sql-kafka-0-10_2.12_2.12-3.0.0.pom
+[error]   not found: https://repo.typesafe.com/typesafe/simple/maven-releases/org/apache/spark/spark-sql-kafka-0-10_2.12_2.12/3.0.0/spark-sql-kafka-0-10_2.12_2.12-3.0.0.pom
 [error] 	at lmcoursier.CoursierDependencyResolution.unresolvedWarningOrThrow(CoursierDependencyResolution.scala:249)
 [error] 	at lmcoursier.CoursierDependencyResolution.$anonfun$update$35(CoursierDependencyResolution.scala:218)
 [error] 	at scala.util.Either$LeftProjection.map(Either.scala:573)
@@ -52,27 +36,11 @@
 [error] 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
 [error] 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
 [error] 	at java.lang.Thread.run(Thread.java:748)
-[error] (ssExtractDependencies) sbt.librarymanagement.ResolveException: Error downloading org.apache.spark:spark-mllib_2.12:3.0.0-beta
+[error] (ssExtractDependencies) sbt.librarymanagement.ResolveException: Error downloading org.apache.spark:spark-sql-kafka-0-10_2.12_2.12:3.0.0
 [error]   Not found
 [error]   Not found
-[error]   not found: /Users/sajeedbakht/.ivy2/local/org.apache.spark/spark-mllib_2.12/3.0.0-beta/ivys/ivy.xml
-[error]   not found: https://repo1.maven.org/maven2/org/apache/spark/spark-mllib_2.12/3.0.0-beta/spark-mllib_2.12-3.0.0-beta.pom
-[error]   not found: https://dl.bintray.com/spark-packages/maven/org/apache/spark/spark-mllib_2.12/3.0.0-beta/spark-mllib_2.12-3.0.0-beta.pom
-[error]   not found: https://mvnrepository.com/org/apache/spark/spark-mllib_2.12/3.0.0-beta/spark-mllib_2.12-3.0.0-beta.pom
-[error]   not found: https://repo.typesafe.com/typesafe/simple/maven-releases/org/apache/spark/spark-mllib_2.12/3.0.0-beta/spark-mllib_2.12-3.0.0-beta.pom
-[error] Error downloading org.apache.spark:spark-sql_2.12:3.0.0-beta
-[error]   Not found
-[error]   Not found
-[error]   not found: /Users/sajeedbakht/.ivy2/local/org.apache.spark/spark-sql_2.12/3.0.0-beta/ivys/ivy.xml
-[error]   not found: https://repo1.maven.org/maven2/org/apache/spark/spark-sql_2.12/3.0.0-beta/spark-sql_2.12-3.0.0-beta.pom
-[error]   not found: https://dl.bintray.com/spark-packages/maven/org/apache/spark/spark-sql_2.12/3.0.0-beta/spark-sql_2.12-3.0.0-beta.pom
-[error]   not found: https://mvnrepository.com/org/apache/spark/spark-sql_2.12/3.0.0-beta/spark-sql_2.12-3.0.0-beta.pom
-[error]   not found: https://repo.typesafe.com/typesafe/simple/maven-releases/org/apache/spark/spark-sql_2.12/3.0.0-beta/spark-sql_2.12-3.0.0-beta.pom
-[error] Error downloading org.apache.spark:spark-core_2.12:3.0.0-beta
-[error]   Not found
-[error]   Not found
-[error]   not found: /Users/sajeedbakht/.ivy2/local/org.apache.spark/spark-core_2.12/3.0.0-beta/ivys/ivy.xml
-[error]   not found: https://repo1.maven.org/maven2/org/apache/spark/spark-core_2.12/3.0.0-beta/spark-core_2.12-3.0.0-beta.pom
-[error]   not found: https://dl.bintray.com/spark-packages/maven/org/apache/spark/spark-core_2.12/3.0.0-beta/spark-core_2.12-3.0.0-beta.pom
-[error]   not found: https://mvnrepository.com/org/apache/spark/spark-core_2.12/3.0.0-beta/spark-core_2.12-3.0.0-beta.pom
-[error]   not found: https://repo.typesafe.com/typesafe/simple/maven-releases/org/apache/spark/spark-core_2.12/3.0.0-beta/spark-core_2.12-3.0.0-beta.pom
+[error]   not found: /Users/sajeedbakht/.ivy2/local/org.apache.spark/spark-sql-kafka-0-10_2.12_2.12/3.0.0/ivys/ivy.xml
+[error]   not found: https://repo1.maven.org/maven2/org/apache/spark/spark-sql-kafka-0-10_2.12_2.12/3.0.0/spark-sql-kafka-0-10_2.12_2.12-3.0.0.pom
+[error]   not found: https://dl.bintray.com/spark-packages/maven/org/apache/spark/spark-sql-kafka-0-10_2.12_2.12/3.0.0/spark-sql-kafka-0-10_2.12_2.12-3.0.0.pom
+[error]   not found: https://mvnrepository.com/org/apache/spark/spark-sql-kafka-0-10_2.12_2.12/3.0.0/spark-sql-kafka-0-10_2.12_2.12-3.0.0.pom
+[error]   not found: https://repo.typesafe.com/typesafe/simple/maven-releases/org/apache/spark/spark-sql-kafka-0-10_2.12_2.12/3.0.0/spark-sql-kafka-0-10_2.12_2.12-3.0.0.pom
