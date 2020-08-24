@@ -5,6 +5,7 @@ import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.Topology
 import org.apache.kafka.streams.kstream.internals.KStreamTransformValues
+import com.mongodb.spark.config.ReadConfig
 
 
 object launchSpark {
@@ -59,7 +60,7 @@ object launchSpark {
     }))
 
 
-      }
+  }
 
 
 

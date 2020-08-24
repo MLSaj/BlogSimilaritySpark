@@ -1,4 +1,4 @@
-
+package com.testing
 import com.mongodb.spark.config.ReadConfig
 import com.mongodb.spark.sql._
 import org.apache.spark.sql.SparkSession
@@ -16,7 +16,7 @@ object RecommendationUpdate{
 
 
   val sparkSession = SparkSession.builder()
-    .master("local")
+    //.master("local")
     .appName("Recommendation")
     .config("spark.cassandra.connection.host", "localhost")
     .config("spark.cassandra.connection.port", "9042")
@@ -87,8 +87,9 @@ object RecommendationUpdate{
   def main(args: Array[String]): Unit = {
 
     //readSessions.show()
+    val id_val = args(0)
     import sparkSession.implicits._
-    val user = readSessions.filter($"id" === 1).withColumn(colName = "visit_list", makeVisitUdf(readSessions("visited"))).limit(1)
+    val user = readSessions.filter($"id" === id_val ).withColumn(colName = "visit_list", makeVisitUdf(readSessions("visited"))).limit(1)
     val visited_list = user.select("visit_list").as[Array[String]].collect()(0)
     val new_data = sparkSession.sqlContext.loadFromMongoDB(ReadConfig(Map("uri" -> "mongodb://000.000.000.000:27017/blog.cleanVectors")))
 
@@ -125,10 +126,10 @@ object RecommendationUpdate{
     val similarities: Array[String] = sims.select("title").orderBy(desc("similarities")).limit(2).map(r => r(0).asInstanceOf[String]).collect()
 
     //write this to mongoDB
-    val data = Seq((1,similarities))
+    val data = Seq((id_val,similarities))
     val rdd = sparkSession.sparkContext.parallelize(data)
     val df = rdd.toDF("id","recommendations")
-    df.show()
+    //df.show()
 
     df.write.format("org.apache.spark.sql.cassandra")
     .mode("append")

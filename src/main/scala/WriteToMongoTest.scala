@@ -1,9 +1,12 @@
+package com.testing
 import com.mongodb.spark.config.{ReadConfig, WriteConfig}
 import com.mongodb.spark.sql._
+
 import com.testing.SimilarityUpdate.makeMongoURI
 import org.apache.spark.ml.feature.{HashingTF, IDF, Normalizer, Tokenizer}
 import org.apache.spark.sql.functions.{col, udf}
 import org.apache.spark.sql.{DataFrame, SparkSession}
+
 
 
 
@@ -16,7 +19,7 @@ object WriteToMongoTest {
 
 
   val sparkSession = SparkSession.builder()
-    .master("local")
+    //.master("local[*]")
     .appName("MongoSparkConnectorIntro")
     //.config("spark.mongodb.input.uri", "mongodb://127.0.0.1/blog.articles")
     //.config("spark.mongodb.output.uri", "mongodb://127.0.0.1/blog.vectors")
