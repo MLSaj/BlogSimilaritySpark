@@ -1,0 +1,1 @@
+/Users/sajeedbakht/Documents/kafka25/bin/kafka-console-producer.sh --topic eventTopic --bootstrap-server localhost:9092

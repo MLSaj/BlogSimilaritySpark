@@ -16,7 +16,7 @@ object RecommendationUpdate{
 
 
   val sparkSession = SparkSession.builder()
-    //.master("local")
+    .master("local[*]")
     .appName("Recommendation")
     .config("spark.cassandra.connection.host", "localhost")
     .config("spark.cassandra.connection.port", "9042")
@@ -87,12 +87,14 @@ object RecommendationUpdate{
   def main(args: Array[String]): Unit = {
 
     //readSessions.show()
-    val id_val = args(0)
+    val id_val = args(0).toInt
+    //val id_val = "423".toInt
+
     import sparkSession.implicits._
     val user = readSessions.filter($"id" === id_val ).withColumn(colName = "visit_list", makeVisitUdf(readSessions("visited"))).limit(1)
     val visited_list = user.select("visit_list").as[Array[String]].collect()(0)
     val new_data = sparkSession.sqlContext.loadFromMongoDB(ReadConfig(Map("uri" -> "mongodb://000.000.000.000:27017/blog.cleanVectors")))
-
+    new_data.show()
 
     val visited_vector = new_data.filter(new_data("title").isin(visited_list:_*))
 
@@ -137,6 +139,7 @@ object RecommendationUpdate{
       .option("table","recommendations")
       .save()
 
+    Thread.sleep(1000000)
 
 
 

@@ -142,6 +142,7 @@ object StreamEvents {
       .option("kafka.bootstrap.servers", "localhost:9092")
       .option("subscribe", KAFKA_TOPIC_NAME_CONS)
       .option("startingOffsets", "latest")
+      .option("failOnDataLoss", false)
       .load()
       //.as[String
 
