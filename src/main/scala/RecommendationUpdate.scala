@@ -1,7 +1,8 @@
 package com.testing
 import com.mongodb.spark.config.ReadConfig
 import com.mongodb.spark.sql._
-import org.apache.spark.sql.SparkSession
+import com.testing.RecommendationUpdate.sparkSession
+import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.apache.spark.sql.cassandra._
 import org.apache.spark.sql.functions.{desc, udf}
 import org.apache.spark.ml.linalg.{Vector, Vectors}
@@ -16,13 +17,13 @@ object RecommendationUpdate{
 
 
   val sparkSession = SparkSession.builder()
-    .master("local[*]")
+    //.master("local[*]")
     .appName("Recommendation")
     .config("spark.cassandra.connection.host", "localhost")
     .config("spark.cassandra.connection.port", "9042")
     .getOrCreate()
 
-  val readSessions = sparkSession.sqlContext
+  var readSessions:DataFrame = sparkSession.sqlContext
     .read
     .cassandraFormat("session", "blog").load()
 
@@ -84,62 +85,128 @@ object RecommendationUpdate{
   }
 
 
+
   def main(args: Array[String]): Unit = {
 
     //readSessions.show()
+    //val id_val = args(0).toInt
     val id_val = args(0).toInt
-    //val id_val = "423".toInt
 
+    val time_stamp:Long = args(1).toLong
+    //println(readSessions.show())
     import sparkSession.implicits._
-    val user = readSessions.filter($"id" === id_val ).withColumn(colName = "visit_list", makeVisitUdf(readSessions("visited"))).limit(1)
-    val visited_list = user.select("visit_list").as[Array[String]].collect()(0)
-    val new_data = sparkSession.sqlContext.loadFromMongoDB(ReadConfig(Map("uri" -> "mongodb://000.000.000.000:27017/blog.cleanVectors")))
-    new_data.show()
+    import org.apache.spark.sql._
+    var length:Long = 0
+    //print(okay === 1)
+    println(length)
 
-    val visited_vector = new_data.filter(new_data("title").isin(visited_list:_*))
+    var fresh = false
+    var time_processed = 0;
+    var check_length = false;
 
-    val not_visited_pre = new_data.filter(!new_data("title").isin(visited_list:_*))
+    while(!check_length || !fresh){
+      //println("Waiting for it to show")
+      //Thread.sleep(10000)
+      readSessions = sparkSession.sqlContext.read.cassandraFormat("session", "blog").load()
 
-    val not_visited = not_visited_pre.withColumn("sparse", makeSparseMapUdf(new_data("size"),
-      new_data("values"), new_data("indices")))
+      //readSessions.show()
+      import sparkSession.implicits._
+      var count = readSessions.filter($"id" === id_val)
+      //import sparkSession.implicits._
+      //time_processed = readSessions.select("timestamp").as[Long].collect()(0)
 
+      length = count.count()
 
+      check_length = length == 1
+      if(check_length){
+        var time_processed = count.select("timestamp").as[Long].collect()(0)
+        //println("Found it")
+        //println(time_processed)
+        //println(time_stamp)
+        if(time_processed >= time_stamp) {
+          //println("It's fresh")
+          fresh = true
+        }
+      }
 
-    var empty:org.apache.spark.ml.linalg.Vector = Vectors.sparse(28, Array(0), Array(0.0000001))
-
-    for(blogName<-visited_list){
-
-
-      val current_event = visited_vector.filter($"title" === blogName)
-
-      val values: Array[Double] = current_event.select("values").as[Array[Double]].collect()(0)
-      val indices: Array[Int] = current_event.select("indices").as[Array[Int]].collect()(0)
-      val size: Int = current_event.select("size").as[Int].collect()(0)
-      val current_vector = Vectors.sparse(size, indices, values)
-      empty = add_two_sparse(current_vector,empty)
     }
 
-    val sims = not_visited.withColumn(colName = "similarities", compare_sparse(empty)
-    (not_visited("sparse")))
-
-    //sims.select("title").orderBy(desc("similarities")).limit(2).show()
+    //println("Length check", check_length)
 
 
-    val similarities: Array[String] = sims.select("title").orderBy(desc("similarities")).limit(2).map(r => r(0).asInstanceOf[String]).collect()
 
-    //write this to mongoDB
-    val data = Seq((id_val,similarities))
-    val rdd = sparkSession.sparkContext.parallelize(data)
-    val df = rdd.toDF("id","recommendations")
-    //df.show()
 
-    df.write.format("org.apache.spark.sql.cassandra")
-    .mode("append")
-      .option("keyspace", "blog")
-      .option("table","recommendations")
-      .save()
+    if(check_length && fresh) {
+      import sparkSession.implicits._
+      val user = readSessions.filter($"id" === id_val).withColumn(colName = "visit_list", makeVisitUdf(readSessions("visited"))).limit(1)
 
-    Thread.sleep(1000000)
+      val visited_list = user.select("visit_list").as[Array[String]].collect()(0)
+      val new_data = sparkSession.sqlContext.loadFromMongoDB(ReadConfig(Map("uri" -> "mongodb://000.000.000.000:27017/blog.cleanVectors")))
+      //new_data.show()
+
+      val visited_vector = sparkSession.sparkContext.broadcast(new_data.filter(new_data("title").isin(visited_list: _*)))
+
+      val not_visited_pre = new_data.filter(!new_data("title").isin(visited_list: _*))
+
+      val not_visited = not_visited_pre.withColumn("sparse", makeSparseMapUdf(new_data("size"),
+        new_data("values"), new_data("indices")))
+
+
+      var empty: org.apache.spark.ml.linalg.Vector = Vectors.sparse(28, Array(0), Array(0.0000001))
+      if (visited_list.length == 0) {
+        //println("Nothing here")
+      }
+      for (blogName <- visited_list.takeRight(2)) {
+
+
+        val current_event = visited_vector.value.filter($"title" === blogName)
+        //val values: Array[Double] = current_event.select("values").as[Array[Double]].toLocalIterator()
+
+
+        val values: Array[Double] = current_event.select("values").as[Array[Double]].collect()(0)
+        val indices: Array[Int] = current_event.select("indices").as[Array[Int]].collect()(0)
+        val size: Int = current_event.select("size").as[Int].collect()(0)
+        val current_vector = Vectors.sparse(size, indices, values)
+        empty = add_two_sparse(current_vector, empty)
+      }
+
+      val sims = not_visited.withColumn(colName = "similarities", compare_sparse(empty)
+      (not_visited("sparse")))
+
+      //sims.select("title").orderBy(desc("similarities")).limit(2).show()
+
+
+      val similarities: Array[String] = sims.select("title").orderBy(desc("similarities")).limit(2).map(r => r(0).asInstanceOf[String]).collect()
+
+      //write this to mongoDB
+      //kafka
+      //val data = Seq((id_val.toString,similarities.toString))
+      import scala.math.max
+      //cassandra
+      val data = Seq((id_val, similarities, max(time_stamp,time_processed)))
+
+
+      val rdd = sparkSession.sparkContext.parallelize(data)
+      //for cassandandra
+      val df = rdd.toDF("id", "recommendations", "timestamp")
+
+      //for kafka
+      //val df = rdd.toDF("id","recommendations").toDF("key","value")
+      //df.show()
+
+      df.write.format("org.apache.spark.sql.cassandra")
+        .mode("append")
+        .option("keyspace", "blog")
+        .option("table", "recommendations")
+        .save()
+    }
+//    df.write
+//      .format("kafka")
+//      .option("kafka.bootstrap.servers","localhost:9092")
+//      .option("topic","testTopic")
+//      .save()
+
+    //Thread.sleep(1000000)
 
 
 

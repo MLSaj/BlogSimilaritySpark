@@ -96,9 +96,9 @@ def main(args: Array[String]): Unit = {
 
   with_sparse.show(20,false)
 
-  val event1: UserEvent = UserEvent(1, "Blog4")
-  val event2: UserEvent = UserEvent(1, "Blog6")
-  val event3: UserEvent = UserEvent(1, "Blog3")
+  val event1: UserEvent = UserEvent(1, "Blog4",0)
+  val event2: UserEvent = UserEvent(1, "Blog6",0)
+  val event3: UserEvent = UserEvent(1, "Blog3",0)
 
   val eventIterator: Iterator[UserEvent] = Iterator(event1, event2, event3)
 

@@ -31,7 +31,7 @@ object StreamEvents {
   val cassandra_table_name = "session"
 
   val sparkSession = SparkSession.builder()
-    .master("local[*]")
+    .master("local")
     .appName("StreamEvents")
     .config("spark.cassandra.connection.host", "localhost")
     .config("spark.cassandra.connection.port", "9042")
@@ -40,21 +40,22 @@ object StreamEvents {
   def updateUserStateWithEvent(user:Int, statez:UserSession, eventz:UserEvent):UserSession = {
     val option_state = Option(statez)
 
-    val state = option_state.getOrElse(UserSession(user,List.empty[String]))
+    val state = option_state.getOrElse(UserSession(user,"", 0))
 
     val option_event = Option(eventz)
 
     var path_visited = state.visited
 
-    val event = option_event.getOrElse(UserEvent(id = -9999, url = "test"))
+    val event = option_event.getOrElse(UserEvent(id = -9999, url = "test", 0))
 
 
     path_visited  =  if(path_visited.isEmpty){
-      path_visited :+ event.url
+      event.url
     } else{
-      List(event.url.toString)
+      path_visited + '-' + event.url
     }
-      state.visited  = state.visited ++ path_visited
+      state.visited  = path_visited
+      state.timestamp = eventz.timestamp
       state
 
   }
@@ -69,7 +70,7 @@ object StreamEvents {
     }
     else {
       //println("State does not exist")
-      UserSession(user,List.empty[String])
+      UserSession(user,"",0)
     }
 
     for (event <- events) {
@@ -103,8 +104,8 @@ object StreamEvents {
       connector.withSessionDo { session =>
         session.execute(
           s"""
-             |insert into $keyspace.$table("id","visited")
-             |values (${sess.id}, '${sess.visited.toArray.mkString("-")}')
+             |insert into $keyspace.$table("id","visited","timestamp")
+             |values (${sess.id}, '${sess.visited}' , ${sess.timestamp})
            """.stripMargin)
       }
     }

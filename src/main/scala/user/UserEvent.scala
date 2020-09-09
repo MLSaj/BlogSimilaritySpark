@@ -4,10 +4,10 @@ import argonaut.Argonaut._
 import argonaut.CodecJson
 
 
-case class UserEvent(id: Int, url: String)
+case class UserEvent(id: Int, url: String,timestamp:Long)
 object UserEvent {
   implicit def codec: CodecJson[UserEvent] =
-    casecodec2(UserEvent.apply, UserEvent.unapply)("id", "url")
+    casecodec3(UserEvent.apply, UserEvent.unapply)("id", "url","timestamp")
 
-  lazy val empty = UserEvent(-1, "")
+  lazy val empty = UserEvent(-1, "", 0)
 }

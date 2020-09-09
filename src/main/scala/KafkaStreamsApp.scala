@@ -1,5 +1,8 @@
+import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.spark.sql.SparkSession
 import sun.nio.ch.FileDispatcherImpl
+
+import scala.util.{Failure, Success, Try}
 
 object KafkaStreamsApp extends App {
 
@@ -21,28 +24,37 @@ object KafkaStreamsApp extends App {
 
   // Step 1. Describe Topology
   // Consume records from input topic and produce records to upper topic
+  import org.apache.kafka.streams.processor.TimestampExtractor
+
+
   val builder = new StreamsBuilder
 
   val uppers = builder
     .stream[String, String]("eventTopic")
     .foreach((k:String, json:String) => {
+      println(k)
       println(json)
       println(Parse.parse(json))
-      val url:String = Parse.parseWith(json, _.field("url").flatMap(_.string).getOrElse("Error!"), msg => msg)
       val id:String = Parse.parseWith(json, _.field("id").flatMap(_.string).getOrElse("Error!"), msg => msg)
 
-      println(url)
-      println(id)
-      println("\n")
 
-      if(id != "Error!" && json != "hi") {
+
+      val id_check = Try(id.toInt).isSuccess
+
+      if(id_check != false && json != "hi") {
+        val url:String = Parse.parseWith(json, _.field("url").flatMap(_.string).getOrElse("Error!"), msg => msg)
+        val id:String = Parse.parseWith(json, _.field("id").flatMap(_.string).getOrElse("Error!"), msg => msg)
+        val timestamp:String = Parse.parseWith(json, _.field("timestamp").flatMap(_.string).getOrElse("Error!"), msg => msg)
+        val timeStampInt:Long = timestamp.toLong
         val sparkLauncher = new SparkLauncher
         //Set Spark properties.only Basic ones are shown here.It will be overridden if properties are set in Main class.
         sparkLauncher.setSparkHome("/usr/local/Cellar/apache-spark/3.0.0/libexec")
           .setAppResource("/Users/sajeedbakht/Documents/BlogSimilaritySpark/out/artifacts/BlogSimilaritySpark_jar/BlogSimilaritySpark.jar")
           .setMainClass("com.testing.RecommendationUpdate")
-          .setMaster("local[*]")
+          .setMaster("local[5]")
           .addAppArgs(id)
+            .addAppArgs(timestamp)
+
         sparkLauncher.startApplication()
       }
       else{
@@ -76,10 +88,13 @@ object KafkaStreamsApp extends App {
   import java.util.Properties
   val props = new Properties()
   import org.apache.kafka.streams.StreamsConfig
+
   val appId = this.getClass.getSimpleName.replace("$", "")
   props.put(StreamsConfig.APPLICATION_ID_CONFIG, appId)
   props.put(StreamsConfig.CLIENT_ID_CONFIG, appId)
   props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, ":9092")
+  props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest")
+
 
   // Step 4. Create Kafka Streams Client
   import org.apache.kafka.streams.KafkaStreams

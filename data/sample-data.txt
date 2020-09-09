@@ -1,7 +1,23 @@
-{"id":1,"url":"Blog1"}
+Version 1
+{"id":1,"url":"Blog1", }
 {"id":1,"url":"Blog2"}
 {"id":1,"url":"Blog3"}
 {"id":2,"url": "Blog4"}
 {"id":2,"url": "Blog5"}
 {"id":2,"url": "Blog6"}
 {"id":2,"url": "Blog7"}
+
+
+
+
+Version2
+{"id":"1","url":"Blog2","timestamp":"0"}
+{"id":"1","url":"Blog6","timestamp":"1"}
+
+
+Cassandra
+INSERT INTO blog.session (id, timestamp, visited) VALUES (1, 0, ‘Blog2’)
+
+INSERT INTO blog.session (id, timestamp, visited) VALUES (1, 1, ‘Blog2-Blog6’)
+
+
